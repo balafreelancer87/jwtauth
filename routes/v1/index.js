@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 const config = require('../../config/config');
 
-console.log("NODE_ENV", config.env);
-
 const authRoute = require('./auth');
 const userRoute = require('./users');
 

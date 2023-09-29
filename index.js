@@ -4,7 +4,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 const cors = require("cors");
-const logger = require("morgan");
+const morgan = require("morgan");
 
 //db connection
 const connectDatabase = require("./db/connect");
@@ -14,17 +14,27 @@ connectDatabase();
 const routes = require('./routes/v1');
 
 
+// middlewares
+
 //logger
-app.use(logger("dev"));
+if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
+console.log(`You are in the ${process.env.NODE_ENV} enviroment!`);
 
-//cors
+// Enable Cross-Origin Resource Sharing (CORS)
 app.use(cors());
-
-// parse application/json, basically parse incoming Request Object as a JSON Object
+// Parse incoming JSON data
 app.use(express.json());
-
-// parse incoming Request Object if object, with nested objects, or generally any type.
+// Parse incoming URL-encoded data
 app.use(express.urlencoded({ extended: true }));
+
+// Logging middleware
+app.use((req, res, next) => {
+    // Log details of incoming requests
+    console.log(`Received ${req.method} request for ${req.url}`);
+    console.log('Request Headers:', req.headers);
+    console.log('Request Body:', req.body);
+    next();
+});
 
 
 // index page
