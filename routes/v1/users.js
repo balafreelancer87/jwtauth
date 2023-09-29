@@ -1,6 +1,6 @@
-const { verifyToken, verifyTokenAndAuthorization, verifyTokenAndAdmin } = require("../middlewares/verifyToken");
+const { verifyToken, verifyTokenAndAuthorization, verifyTokenAndAdmin } = require("../../middlewares/verifyToken");
 const router = require("express").Router();
-const userController = require('../controllers/userController');
+const userController = require('../../controllers/userController');
 
 //GET ALL USERS
 router.route('/').get(verifyToken, userController.getAllUser);

@@ -6,13 +6,12 @@ const PORT = process.env.PORT || 5000;
 const cors = require("cors");
 const logger = require("morgan");
 
-// db connection
+//db connection
 const connectDatabase = require("./db/connect");
 connectDatabase();
 
-// all routes
-const authRoute = require("./routes/auth");
-const userRoute = require("./routes/users");
+//all routes
+const routes = require('./routes/v1');
 
 
 //logger
@@ -33,8 +32,9 @@ app.get("/", async (req, res) => {
     res.status(200).json("Welcome to API")
 });
 
-app.use("/api/v1/auth", authRoute);
-app.use("/api/v1/users", userRoute);
+
+// v1 api routes
+app.use('/api/v1', routes);
 
 //catch 404 and user enters invalid url
 app.use((req, res, next) => {
@@ -68,4 +68,12 @@ process.on('uncaughtException', (err) => {
         process.exit(1);
     });
 })
+
+process.on('SIGTERM', () => {
+    console.log('SIGTERM received');
+    if (server) {
+        server.close();
+    }
+});
+
 

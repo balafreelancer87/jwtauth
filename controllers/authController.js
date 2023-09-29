@@ -2,6 +2,7 @@ const User = require("../models/userModel");
 const CryptoJS = require("crypto-js");
 const jwt = require("jsonwebtoken");
 const response = require("../utils/response.js");
+const config = require('../config/config');
 
 //Register User - /api/v1/auth/register
 exports.registerUser = async (req, res) => {
@@ -16,7 +17,7 @@ exports.registerUser = async (req, res) => {
       email: req.body.email,
       password: CryptoJS.AES.encrypt(
         req.body.password,
-        process.env.PASSWORD_SECRET
+        config.password.secret
       ).toString(),
     });
 
@@ -38,7 +39,7 @@ exports.loginUser = async (req, res) => {
 
       const hashedPassword = CryptoJS.AES.decrypt(
         user.password,
-        process.env.PASSWORD_SECRET
+        config.password.secret
       );
       const originalPassword = hashedPassword.toString(CryptoJS.enc.Utf8);
 
@@ -50,13 +51,13 @@ exports.loginUser = async (req, res) => {
           id: user._id,
           isAdmin: user.isAdmin,
         },
-        process.env.JWT_SECRET,
+        config.jwt.secret,
         { expiresIn: "3 days" }
       );
 
       const { password, ...others } = user._doc;
 
-      response(res, 400, true, "Login successful", {accessToken, ...others});
+      response(res, 200, true, "Login successful", {accessToken, ...others});
     } catch (err) {
       response(res, 500, false, 'Internal Sever Error', err.message);
     }

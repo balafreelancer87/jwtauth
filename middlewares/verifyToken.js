@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const response = require("../utils/response.js");
+const config = require('../config/config');
 
 //UPDATE USER INFORMATION
 const verifyToken = (req, res, next) => {
@@ -12,7 +13,7 @@ const verifyToken = (req, res, next) => {
          const token = authHeader.split(" ")[1];
          //console.log("token", token)
 
-        jwt.verify(token, process.env.JWT_SECRET, (err,user) => {
+        jwt.verify(token, config.jwt.secret, (err,user) => {
             if(err) res.status(403).json("Invalid Token!");
             req.user = user;
             console.log("verifyToken req.user", user)

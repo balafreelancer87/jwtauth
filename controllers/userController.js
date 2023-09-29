@@ -1,5 +1,7 @@
 const User = require("../models/userModel");
 const response = require("../utils/response.js");
+const config = require('../config/config');
+
 
 //Get All User - /api/v1/users/
 exports.getAllUser = async (req, res) => {
@@ -30,7 +32,7 @@ exports.updateUser = async (req, res) => {
 
     if(req.body.password) {
         req.body.password = CryptoJS.AES.encrypt(
-            req.body.password, process.env.PASSWORD_SECRET
+            req.body.password, config.password.secret
         ).toString();
     }
 
