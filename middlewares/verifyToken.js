@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const response = require("../utils/response.js");
 
 //UPDATE USER INFORMATION
-const verifyToken = (req,res,next) => {
+const verifyToken = (req, res, next) => {
     //console.log("req.headers", req.headers)
 
     const authHeader = req.headers.authorization
@@ -25,11 +25,11 @@ const verifyToken = (req,res,next) => {
 };
 
 
-const verifyTokenAndAuthorization = (req,res,next) => {
+const verifyTokenAndAuthorization = (req, res, next) => {
     verifyToken(req,res,()=>{
 
-        console.log("req.params.id --middleware", req.params.id)
-        console.log("req.user.isAdmin --middleware", req.user.isAdmin)
+        // console.log("req.params.id --middleware", req.params.id)
+        // console.log("req.user.isAdmin --middleware", req.user.isAdmin)
 
         if(req.user.id === req.params.id || req.user.isAdmin) {
             next();
@@ -40,10 +40,10 @@ const verifyTokenAndAuthorization = (req,res,next) => {
 };
 
 
-const verifyTokenAndAdmin = (req,res,next) => {
+const verifyTokenAndAdmin = (req, res, next) => {
     verifyToken(req,res,()=>{
-        console.log("req.user --middleware", req.user)
-        console.log("req.user.isAdmin --middleware", req.user.isAdmin)
+        // console.log("req.user --middleware", req.user)
+        // console.log("req.user.isAdmin --middleware", req.user.isAdmin)
         if(req.user.isAdmin) {
             next();
         } else{

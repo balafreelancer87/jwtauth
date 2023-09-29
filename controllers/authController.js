@@ -6,10 +6,10 @@ const response = require("../utils/response.js");
 //Register User - /api/v1/auth/register
 exports.registerUser = async (req, res) => {
 
-    console.log("req.body", req.body);
-    console.log("username", req.body.username);
-    console.log("email", req.body.email);
-    console.log("password", req.body.password);
+    // console.log("req.body", req.body);
+    // console.log("username", req.body.username);
+    // console.log("email", req.body.email);
+    // console.log("password", req.body.password);
 
     const newUser = new User({
       username: req.body.username,
@@ -20,7 +20,7 @@ exports.registerUser = async (req, res) => {
       ).toString(),
     });
 
-    console.log("newUser", newUser);
+    // console.log("newUser", newUser);
 
     try {
       const savedUser = await newUser.save();
