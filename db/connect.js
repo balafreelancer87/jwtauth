@@ -1,7 +1,7 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
 
-const connectDatabase = async() => {
+const connectDatabase = async () => {
 
 //strictQuery false by default. That means that all the fields will be saved in the database, even if some of them are not specified in the schema model
 mongoose.set("strictQuery", false);

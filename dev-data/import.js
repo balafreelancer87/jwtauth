@@ -1,63 +1,49 @@
 const fs = require('fs');
-const mongoose = require('mongoose');
-
+const chalk = require('chalk');
 const config = require('../config/config');
 
-// const Posts = require('./models/postModel');
+const log = console.log;
+const errorStyle = chalk.bold.red;
+const successStyle = chalk.bold.green;
+const warnStyle = chalk.bold.yellow;
+
+
 const User = require('./models/userModel');
 
 //db connection
-// const connectDatabase = require("../db/connect");
+ const connectDatabase = require("../db/connect");
 
-// dotenv.config({ path: `${__dirname}/../config.env` });
-// const DB = process.env.DATABASE.replace(
-//   '<PASSWORD>',
-//   process.env.DATABASE_PASSWORD
-// );
+const seedDB = async () => {
+    // READ JSON FILE
+    const users = await JSON.parse(fs.readFileSync(`${__dirname}/users.json`, 'utf-8'));
 
-// mongoose
-//   .connect(config.mongoose.url, {
-//     useNewUrlParser: true,
-//     useCreateIndex: true,
-//     useUnifiedTopology: true,
-//     useFindAndModify: false,
-//   })
-//   .then(() => console.log('Database Connection Successful... Happy Blogging!'))
-//   .catch((err) => {
-//     console.error(`Database Error: ${err}`);
-//   });
-
-
-// READ JSON FILE
-// const posts = JSON.parse(fs.readFileSync(`${__dirname}/posts.json`, 'utf-8'));
-// const users = JSON.parse(fs.readFileSync(`${__dirname}/users.json`, 'utf-8'));
+    //Insert into DB
+    await User.create(users);
+    log(successStyle('Data seeded successfully'));
+    process.exit();
+}
 
 // IMPORT JSON INTO DB
 const importData = async() => {
   try {
-    console.log("config.mongoose.url", config.mongoose.url);
-
-    await mongoose
-    .connect(config.mongoose.url, {
-      useNewUrlParser: true,
-      useCreateIndex: true,
-      useUnifiedTopology: true,
-      useFindAndModify: false,
-    })
-    .then(() => console.log('Database Connection Successful... Happy Blogging!'))
-    .catch((err) => {
-      console.error(`Database Error: ${err}`);
+    await connectDatabase().then(async () => {
+      await seedDB();
     });
 
-    const users = await JSON.parse(fs.readFileSync(`${__dirname}/users.json`, 'utf-8'));
-
-    await User.create(users);
-    console.log('Data seeded successfully');
-    process.exit();
   } catch (err) {
-    console.log(err);
+    log(errorStyle("importData err", err));
   }
 };
+
+// const importData = async() => {
+//   try {
+//     await User.create(users);
+//     console.log('Data seeded successfully');
+//     process.exit();
+//   } catch (err) {
+//     console.log(err);
+//   }
+// };
 
 // DELETE ALL DATA ON DB:
 // const deleteData = async() => {
