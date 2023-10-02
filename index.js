@@ -1,14 +1,19 @@
 require("dotenv").config();
+// express
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+//security and logger
 const cors = require("cors");
 const morgan = require("morgan");
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
 const hpp = require('hpp');
 const rateLimit = require('express-rate-limit');
+
+// middlewares
+const errorHandlerMiddleware = require('./middlewares/errorHandler');
 
 //db connection
 const connectDatabase = require("./db/connect");
@@ -18,11 +23,11 @@ connectDatabase();
 const routes = require('./routes/v1');
 
 
-// middlewares
-
 //logger
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
 console.log(`You are in the ${process.env.NODE_ENV} enviroment!`);
+
+// middlewares
 
 // Restrict all routes to only 100 requests per IP address every 10 minutes
 app.set('trust proxy', 1);
@@ -60,7 +65,6 @@ app.use(
 
 
 
-
 // Logging middleware
 app.use((req, res, next) => {
     // Log details of incoming requests
@@ -88,6 +92,8 @@ app.use((req, res, next) => {
 })
 
 // global error handler
+app.use(errorHandlerMiddleware);
+
 // app.use((error, req, res, next) => {
 //     if (res.headerSent) {
 //         //res already sent ? => don't send res, just forward the error
