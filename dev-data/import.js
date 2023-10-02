@@ -35,6 +35,19 @@ const importData = async() => {
   }
 };
 
+//DELETE ALL DATA ON DB:
+const deleteData = async() => {
+  try {
+    await connectDatabase().then(async () => {
+      await User.deleteMany();
+      console.log('Data successfully deleted');
+    });
+  } catch (err) {
+    console.log(errorStyle("deleteData err", err))
+  }
+  process.exit();
+}
+
 // const importData = async() => {
 //   try {
 //     await User.create(users);

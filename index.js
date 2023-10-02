@@ -5,6 +5,10 @@ const PORT = process.env.PORT || 5000;
 
 const cors = require("cors");
 const morgan = require("morgan");
+const mongoSanitize = require('express-mongo-sanitize');
+const helmet = require('helmet');
+const hpp = require('hpp');
+const rateLimit = require('express-rate-limit');
 
 //db connection
 const connectDatabase = require("./db/connect");
@@ -20,12 +24,42 @@ const routes = require('./routes/v1');
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
 console.log(`You are in the ${process.env.NODE_ENV} enviroment!`);
 
+// Restrict all routes to only 100 requests per IP address every 10 minutes
+app.set('trust proxy', 1);
+app.use(
+    rateLimit({
+        windowMs: 10 * 60 * 1000,    // 10 minutes
+        max: 100                     // 100 requests per IP
+    })
+);
+
+// Using helmet middleware
+app.use(helmet());
 // Enable Cross-Origin Resource Sharing (CORS)
 app.use(cors());
+// Protect against HPP, should come before any routes
+app.use(hpp());
+
 // Parse incoming JSON data
 app.use(express.json());
 // Parse incoming URL-encoded data
 app.use(express.urlencoded({ extended: true }));
+
+// By default, $ and . characters are removed completely from user-supplied input in the following places:
+// - req.body
+// - req.params
+// - req.headers
+// - req.query
+app.use(
+    mongoSanitize({
+      onSanitize: ({ req, key }) => {
+        console.warn(`This request[${key}] is sanitized`, req);
+      },
+    }),
+  );
+
+
+
 
 // Logging middleware
 app.use((req, res, next) => {
@@ -52,6 +86,19 @@ app.use((req, res, next) => {
         error:'Url not found'
     })
 })
+
+// global error handler
+// app.use((error, req, res, next) => {
+//     if (res.headerSent) {
+//         //res already sent ? => don't send res, just forward the error
+//         return next(error);
+//     }
+//     //else, send a res
+//     res.status(error.code || 500);
+//     res.json({
+//         message: error.message || 'An unknown error occurred',
+//     });
+// });
 
 module.exports = app;
 
