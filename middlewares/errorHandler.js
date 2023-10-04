@@ -1,6 +1,6 @@
 const { StatusCodes } = require('http-status-codes');
 const config = require('../config/config');
-const cLogger = require('../helpers/logger/winstonLogger');
+const wLogger = require('../helpers/logger/winstonLogger');
 
 const errorHandlerMiddleware = (err, req, res, next) => {
     // console.log("Error Handling Middleware called")
@@ -15,7 +15,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
     const statusCode = err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
 
     if (config.env === 'development') {
-      cLogger.error(err);
+      wLogger.error(err);
     }
 
     let errorResponse = {

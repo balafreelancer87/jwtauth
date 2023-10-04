@@ -7,7 +7,7 @@ const app = express();
 //security and logger
 const cors = require("cors");
 // const morgan = require("morgan");
-const loggerMiddleware = require('./helpers/logger');
+const logger = require('./helpers/logger');
 const { rateLimiter } = require('./middlewares/rateLimiter');
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
@@ -29,8 +29,8 @@ const routes = require('./routes/v1');
 // if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
 console.log(`You are in the ${config.env} enviroment!`);
 if (config.env !== 'test') {
-    app.use(loggerMiddleware.successHandler);
-    app.use(loggerMiddleware.errorHandler);
+    app.use(logger.successHandler);
+    app.use(logger.errorHandler);
   }
 
 // middlewares
@@ -69,8 +69,8 @@ app.use(
 // Logging middleware
 app.use((req, res, next) => {
     // Log details of incoming requests
-    console.log(`Received ${req.method} request for ${req.url}`);
-    console.log('Request Headers:', req.headers);
+    // console.log(`Received ${req.method} request for ${req.url}`);
+    // console.log('Request Headers:', req.headers);
     console.log('Request Body:', req.body);
     next();
 });
