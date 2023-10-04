@@ -13,6 +13,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
     // console.error("err.stack", err.stack);
 
     const statusCode = err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
+    res.locals.errorMessage = err.message;
 
     if (config.env === 'development') {
       wLogger.error(err);

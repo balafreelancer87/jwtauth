@@ -1,26 +1,31 @@
-const winston = require('winston');
+const { createLogger, format, transports }= require('winston');
+const { combine, timestamp, label, prettyPrint } = format;
 const config = require('../../config/config');
 
-const enumerateErrorFormat = winston.format((info) => {
+const enumerateErrorFormat = format((info) => {
   if (info instanceof Error) {
     Object.assign(info, { message: info.stack });
   }
   return info;
 });
 
-const cLogger = winston.createLogger({
+const cLogger = createLogger({
   level: config.env === 'development' ? 'debug' : 'info',
-  format: winston.format.combine(
+  format: combine(
     enumerateErrorFormat(),
-    config.env === 'development' ? winston.format.colorize() : winston.format.uncolorize(),
-    winston.format.splat(),
-    winston.format.printf(({ level, message }) => `${level}: ${message}`)
+    timestamp(),
+    config.env === 'development' ? format.colorize() : format.uncolorize(),
+    format.splat(),
+    format.printf(({ level, message, label, timestamp }) => `${timestamp}: ${level}: ${message}`)
   ),
   transports: [
-    new winston.transports.Console({
+    new transports.Console({
       stderrLevels: ['error'],
     }),
+    new transports.File({ filename: "./logs/error.log", level: 'error' })
   ],
+  exceptionHandlers: [new transports.File({ filename: "./logs/exceptions.log" })],
+  rejectionHandlers: [new transports.File({ filename: "./logs/rejections.log" })],
 });
 
 module.exports = cLogger;
