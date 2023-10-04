@@ -1,4 +1,5 @@
 require("dotenv").config();
+const config = require('./config/config');
 // express
 const express = require("express");
 const app = express();
@@ -6,7 +7,8 @@ const PORT = process.env.PORT || 5000;
 
 //security and logger
 const cors = require("cors");
-const morgan = require("morgan");
+// const morgan = require("morgan");
+const logger = require('./helpers/logger');
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
 const hpp = require('hpp');
@@ -24,8 +26,12 @@ const routes = require('./routes/v1');
 
 
 //logger
-if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
-console.log(`You are in the ${process.env.NODE_ENV} enviroment!`);
+// if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
+console.log(`You are in the ${config.env} enviroment!`);
+if (config.env !== 'test') {
+    app.use(logger.successHandler);
+    app.use(logger.errorHandler);
+  }
 
 // middlewares
 

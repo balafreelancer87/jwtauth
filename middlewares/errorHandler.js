@@ -1,15 +1,22 @@
 const { StatusCodes } = require('http-status-codes');
+const config = require('../config/config');
+const winstonLogger = require('../helpers/logger/winstonLogger');
 
 const errorHandlerMiddleware = (err, req, res, next) => {
-    console.log("Error Handling Middleware called")
-    console.log('Path: ', req.path)
-    console.error("err.errors", err.errors);
-    console.error("err.name", err.name);
-    console.error("err.statusCode", err.statusCode);
-    console.error("err.message", err.message);
-    console.error("err.value", err.value);
+    // console.log("Error Handling Middleware called")
+    // console.log('Path: ', req.path)
+    // console.error("err.errors", err.errors);
+    // console.error("err.name", err.name);
+    // console.error("err.statusCode", err.statusCode);
+    // console.error("err.message", err.message);
+    // console.error("err.value", err.value);
+    // console.error("err.stack", err.stack);
 
     const statusCode = err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
+
+    if (config.env === 'development') {
+      winstonLogger.error(err);
+    }
 
     let errorResponse = {
         success: false,

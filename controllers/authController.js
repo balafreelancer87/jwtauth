@@ -3,7 +3,7 @@ const CryptoJS = require("crypto-js");
 const jwt = require("jsonwebtoken");
 const response = require("../utils/response.js");
 const config = require('../config/config');
-const customError = require('../middlewares/customError');
+const customError = require('../helpers/customError');
 const { check, validationResult } = require('express-validator');
 
 //Register User - /api/v1/auth/register
