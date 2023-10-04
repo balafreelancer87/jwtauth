@@ -8,7 +8,7 @@ const enumerateErrorFormat = winston.format((info) => {
   return info;
 });
 
-const winstonLogger = winston.createLogger({
+const cLogger = winston.createLogger({
   level: config.env === 'development' ? 'debug' : 'info',
   format: winston.format.combine(
     enumerateErrorFormat(),
@@ -23,4 +23,4 @@ const winstonLogger = winston.createLogger({
   ],
 });
 
-module.exports = winstonLogger;
+module.exports = cLogger;
