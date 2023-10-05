@@ -3,8 +3,6 @@ const CryptoJS = require("crypto-js");
 const jwt = require("jsonwebtoken");
 const response = require("../utils/response.js");
 const config = require('../config/config');
-const customError = require('../helpers/customError');
-const { check, validationResult } = require('express-validator');
 
 //Register User - /api/v1/auth/register
 exports.registerUser = async (req, res, next) => {
@@ -14,13 +12,6 @@ exports.registerUser = async (req, res, next) => {
     // console.log("email", req.body.email);
     // console.log("password", req.body.password);
     try {
-
-    const errors = validationResult(req);
-
-      if (!errors.isEmpty()) {
-        // return res.json({ errors: errors.array() });
-        return next(customError(401, "Validation Error", { errors: errors.array() }));
-      }
 
     const newUser = new User({
       username: req.body.username,
@@ -36,7 +27,8 @@ exports.registerUser = async (req, res, next) => {
       const savedUser = await newUser.save();
       response(res, 201, true, 'User successfully registered', savedUser);
     } catch (err) {
-      response(res, 500, false, 'Internal Sever Error', err.message);
+      // response(res, 500, false, 'Internal Sever Error', err.message);
+      next(err)
     }
   };
 

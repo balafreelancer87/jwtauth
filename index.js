@@ -23,7 +23,7 @@ const exitHandler = () => {
 
 process.on('unhandledRejection', (err, p)=>{
     cLogger.error(`Error: ${err.message}`);
-    cLogger.error("Possibly Unhandled Rejection at: Promise ", p);
+    cLogger.warn("Possibly Unhandled Rejection at: Promise ", p);
     cLogger.warn('Shutting down the server due to unhandled rejection error');
     exitHandler();
 })
