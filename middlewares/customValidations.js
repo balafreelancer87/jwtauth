@@ -1,5 +1,5 @@
 const { check, validationResult } = require('express-validator');
-const errorCreator = require('../utils/errorCreator');
+const customError = require('../utils/customError');
 // const createError = require('http-errors')
 
 const formattedValidationResult = validationResult.withDefaults({
@@ -16,7 +16,7 @@ const inputValidationMiddleware = (req, res, next) => {
 
     if (!errors.isEmpty()) {
         // console.log("validation", errors.array())
-        return next(errorCreator(400, "Validation Error", { errors: errors.array() }));
+        return next(customError(400, "Validation Error", { errors: errors.array() }));
     } else {
         next();
     }

@@ -4,7 +4,7 @@ const wLogger = require('../helpers/logger/winstonLogger');
 
 const errorHandlerMiddleware = (err, req, res, next) => {
   console.log("Error Handling Middleware called")
-  // console.log('Path: ', req.path)
+  // console.error("err", err);
 
   // console.error("err.errors", err.errors);
   // console.error("err.statusCode", err.statusCode);

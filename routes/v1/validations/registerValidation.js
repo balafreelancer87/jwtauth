@@ -40,6 +40,6 @@ const registerValidation = [
     inputValidationMiddleware
   ];
 
-  module.exports = {
-    registerValidation
-  }
+module.exports = {
+  registerValidation
+}
