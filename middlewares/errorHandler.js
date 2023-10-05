@@ -3,7 +3,7 @@ const config = require('../config/config');
 const wLogger = require('../helpers/logger/winstonLogger');
 
 const errorHandlerMiddleware = (err, req, res, next) => {
-  console.log("Error Handling Middleware called")
+  console.log("Middleware Error Handling called")
   // console.error("err", err);
 
   // console.error("err.errors", err.errors);
@@ -17,7 +17,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
   // console.error("err.code", err.code);
   // console.error("err.keyValue", err.keyValue);
 
-  let customError = {
+  let customErrorResponse = {
     // set default
     success: false,
     statusCode: err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
@@ -38,14 +38,14 @@ const errorHandlerMiddleware = (err, req, res, next) => {
   // }
 
   if (err.code && err.code === 11000) {
-    customError.message = `Duplicate value entered for ${Object.keys(
+    customErrorResponse.message = `Duplicate value entered for ${Object.keys(
       err.keyValue
     )} field, please choose another value`
-    customError.statusCode = 400
+    customErrorResponse.statusCode = 400
   }
   if (err.name === 'CastError') {
-    customError.message = `No item found with id : ${err.value}`
-    customError.statusCode = 404
+    customErrorResponse.message = `No item found with id : ${err.value}`
+    customErrorResponse.statusCode = 404
   }
 
   // let errorResponse = {
@@ -54,8 +54,8 @@ const errorHandlerMiddleware = (err, req, res, next) => {
   //   data: err.errors || null
   // };
 
-  console.log(customError);
-  return res.status(customError.statusCode).json(customError);
+  console.log(customErrorResponse);
+  return res.status(customErrorResponse.statusCode).json(customErrorResponse);
 };
 
 module.exports = errorHandlerMiddleware;
